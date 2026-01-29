@@ -5,7 +5,9 @@ const Layouts = () => {
   return (
     <div>
         <AdminNavbar/>
-        <Outlet/>
+        <div className="mt-10">
+          <Outlet/>
+        </div>
     </div>
   )
 }

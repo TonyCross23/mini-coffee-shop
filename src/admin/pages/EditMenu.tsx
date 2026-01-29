@@ -90,7 +90,7 @@ const EditMenu = () => {
 
   return (
     <div className="p-6 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Create Menu Item</h1>
+      <h1 className="text-2xl font-bold mb-6">Edit Menu Item</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4">
         <div>

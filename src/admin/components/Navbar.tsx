@@ -5,7 +5,7 @@ const AdminNavbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="navbar bg-amber-900 text-white shadow-md px-4">
+    <div className="navbar fixed top-0 left-0 w-full z-50 sm:px-4 bg-amber-900 text-white shadow-md px-4">
       {/* Logo / Brand */}
       <div className="flex-1">
         <a className="btn btn-ghost text-xl sm:text-2xl normal-case">

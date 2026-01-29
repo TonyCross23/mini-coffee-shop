@@ -6,6 +6,8 @@ import AdminHome from "./admin/pages/Home"
 import UserHome from "./customer/pages/Home"
 import AdminOrders from "./admin/pages/Orders"
 import EditMenu from "./admin/pages/EditMenu"
+import VireCart from "./customer/pages/VireCart"
+import Checkout from "./customer/pages/Checkout"
 
 
 function App() {
@@ -21,6 +23,8 @@ function App() {
 
       <Route path="/" element={<Layout />}>
         <Route index element={<UserHome />} />
+        <Route path="/view/cart" element={<VireCart />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Route>
     </Routes>
   )
