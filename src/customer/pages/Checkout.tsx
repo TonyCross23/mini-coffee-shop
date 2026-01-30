@@ -2,9 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { useOrderStore } from "../../store/orderStore";
 import { useState } from "react";
 import supabaseClient from "../../utils/SupabaseClient";
+import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const Checkout = () => {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const items = useOrderStore((state) => state.items);
     const totalAmount = useOrderStore((state) => state.totalAmount);
     const clearCart = useOrderStore((state) => state.clearCart);
@@ -51,8 +54,8 @@ const Checkout = () => {
             if (orderItemsError) {
                 throw orderItemsError;
             }
-
-            alert("Order placed successfully!");
+            toast.success("Order successfully placed!");
+            queryClient.invalidateQueries({ queryKey: ["orders"] });
             clearCart();
             navigate("/");
         } catch (error: any) {

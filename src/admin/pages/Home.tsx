@@ -102,7 +102,7 @@ const AdminHome: React.FC = () => {
 
                             {/* Buttons */}
                             <div className="mt-4 flex justify-center gap-2">
-                                <Link to={`/admin/noallow/menu/edit/${item.id}`} className="btn btn-sm btn-outline w-35">
+                                <Link to={`/admin/noallow/menu/edit/${item.id}`} className="btn btn-sm btn-outline dark:border-amber-700 text-amber-700 w-35">
                                     Edit
                                 </Link>
                                 <button className="btn btn-sm bg-amber-700 text-white w-35">
