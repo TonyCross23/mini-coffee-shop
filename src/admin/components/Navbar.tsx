@@ -1,8 +1,21 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { UserAuth } from "../../context/AuthContext";
 
 const AdminNavbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { signOutUser } = UserAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    try {
+      await signOutUser();
+      navigate('/auth/signin');
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
 
   return (
     <div className="navbar fixed top-0 left-0 w-full z-50 sm:px-4 bg-amber-900 text-white shadow-md px-4">
@@ -11,6 +24,10 @@ const AdminNavbar = () => {
         <a className="btn btn-ghost text-xl sm:text-2xl normal-case">
           Admin Panel
         </a>
+      </div>
+
+      <div>
+        <button onClick={handleLogout}>signOUt</button>
       </div>
 
       {/* Menu Links */}
@@ -28,9 +45,9 @@ const AdminNavbar = () => {
             className="btn btn-square btn-ghost"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
+              viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"/>
+                d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
 

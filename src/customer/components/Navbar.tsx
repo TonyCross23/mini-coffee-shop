@@ -1,10 +1,24 @@
 import { useState } from "react";
 import { useOrderStore } from "../../store/orderStore";
 import CartDropdown from "./CartDropdown";
+import { UserAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const items = useOrderStore(state => state.items);
+  const { signOutUser } = UserAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    try {
+      await signOutUser()
+      navigate('/auth/signin')
+    } catch (error) {
+      console.error("Error signing out:", error)
+    }
+  }
 
   return (
     <div className="navbar fixed top-0 left-0 w-full z-50 bg-amber-900 shadow-sm px-2 sm:px-4">
@@ -30,6 +44,9 @@ const NavBar = () => {
         {isCartOpen && (
           <CartDropdown onClose={() => setIsCartOpen(false)} />
         )}
+        <div>
+          <button onClick={handleLogout}>signOUt</button>
+        </div>
       </div>
     </div>
   );
