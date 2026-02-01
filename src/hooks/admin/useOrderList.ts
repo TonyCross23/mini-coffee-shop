@@ -105,14 +105,13 @@ export const useOrderList = () => {
 
     // Wrapper function
     const handleDeleteOrder = (orderId: number) => {
-        if (!confirm("Are you sure you want to delete this order?")) return; // <-- stop here if cancel
-        deleteMutation.mutate(orderId); // <-- only call mutation if confirmed
+        if (!confirm("Are you sure you want to delete this order?")) return; 
+        deleteMutation.mutate(orderId);
     };
-
 
     useEffect(() => {
         if (ordersData) setOrders(ordersData);
-    }, [ordersData]);
+    }, [orders]);
 
     const handleStatusChange = async (orderId: number, newStatus: "Pending" | "Completed" | "Cancelled") => {
         try {
