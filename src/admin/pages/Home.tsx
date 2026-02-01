@@ -1,47 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import supabaseClient from "../../utils/SupabaseClient";
 import { Link } from "react-router-dom";
-
-interface MenuItem {
-    id: number;
-    name: string;
-    price: number;
-    image_url: string;
-}
+import { useFetchMenu } from "../../hooks/admin/useFetchMenu";
 
 const AdminHome: React.FC = () => {
-    const [searchInput, setSearchInput] = useState("");
-    const [search, setSearch] = useState("");
 
-    const { data: menuItems, isLoading, error } = useQuery<MenuItem[]>({
-        queryKey: ["menuItems"],
-        queryFn: async () => {
-            const { data, error } = await supabaseClient.from("menu_items").select("*").order("created_at", { ascending: true });
-            if (error) throw error;
-            return data
-        }
-    })
+    const { menuItems: filteredMenuItems, isLoading, error, searchInput, setSearchInput, handleKeyDown } = useFetchMenu();
 
-    const filteredMenuItems = menuItems?.filter((item) =>
-        item.name.toLowerCase().includes(search.toLowerCase())
-    );
+    if (isLoading)  return <div>Loading...</div>;
 
-    // Enter Key Handler
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            setSearch(searchInput);
-        }
-    };
-
-
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-
-    if (error) {
-        return <div>Error loading menu items.</div>;
-    }
+    if (error)  return <div>Error loading menu items.</div>;
 
     return (
         <div className="min-h-screen bg-[#F7F4EF] p-4 sm:p-8">
@@ -115,7 +81,7 @@ const AdminHome: React.FC = () => {
             </div>
 
             {/* Empty State */}
-            {menuItems?.length === 0 && (
+            {filteredMenuItems?.length === 0 && (
                 <div className="text-center mt-20 text-gray-500">
                     ☕ No coffee found
                 </div>

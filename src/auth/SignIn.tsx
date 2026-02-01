@@ -1,38 +1,23 @@
-import { useState } from "react"
-import { UserAuth } from "../context/AuthContext"
-import { useNavigate } from "react-router-dom"
+import { useSingIn } from "../hooks/useSignIn"
 
 const SignIn = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [error, setError] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
-    const { signInUser } = UserAuth()
-    const navigate = useNavigate()
 
-    const handleSignin = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        setIsLoading(true)
-        setError('')
-        try {
-            const result = await signInUser(email, password)
-            if (result?.success) {
-                navigate('/')
-            }
-        } catch (error: any) {
-            setError(error.message || "something went wrong")
-        } finally {
-            setIsLoading(false)
-        }
-    }
+    const { register, handleSubmit, onSubmit, errors, isLoading, authError } = useSingIn()
+
     return (
         <div className="min-h-screen grid place-items-center bg-base-200 p-4">
             <div className="card w-full max-w-md shadow-xl bg-base-100">
                 <div className="card-body">
                     <h2 className="card-title justify-center text-2xl font-bold">Sign In</h2>
 
-                    <form onSubmit={handleSignin} className="space-y-4">
-
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                        <div className="my-3">
+                            {authError && (
+                                <div className="alert alert-error text-sm">
+                                    {authError}
+                                </div>
+                            )}
+                        </div>
                         {/* Email */}
                         <div className="form-control">
                             <label className="label">
@@ -42,10 +27,9 @@ const SignIn = () => {
                                 type="email"
                                 placeholder="email@example.com"
                                 className="input input-bordered w-full"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
+                                {...register("email")}
                             />
+                            {errors.email && (<div className="text-red-500 text-sm mt-1">{errors.email.message}</div>)}
                         </div>
 
                         {/* Password */}
@@ -57,24 +41,23 @@ const SignIn = () => {
                                 type="password"
                                 placeholder="••••••••"
                                 className="input input-bordered w-full"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
+                                {...register("password")}
                             />
+                            {errors.password && (<div className="text-red-500 text-sm mt-1">{errors.password.message}</div>)}
                         </div>
 
                         {/* Error message */}
-                        {error && (
+                        {/* {error && (
                             <div className="alert alert-error text-sm">
                                 {typeof error === "string" ? error : "Something went wrong"}
                             </div>
-                        )}
+                        )} */}
 
                         {/* Submit button */}
                         <div className="form-control mt-4">
                             <button
                                 type="submit"
-                                className={`btn btn-primary ${isLoading ? "loading" : ""}`}
+                                className={`btn btn-primary w-full ${isLoading ? "loading" : ""}`}
                                 disabled={isLoading}
                             >
                                 {isLoading ? "Signing in..." : "Sign In"}

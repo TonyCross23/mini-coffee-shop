@@ -52,8 +52,8 @@ export const AuthContextProvider = ({ children }: AuthProviderProps) => {
             if (error) throw error;
 
             return { success: true, data }
-        } catch (error) {
-            console.error(error)
+        } catch (error: any) {
+            throw error;
         }
     }
 

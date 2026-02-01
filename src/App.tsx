@@ -9,7 +9,7 @@ import EditMenu from "./admin/pages/EditMenu"
 import VireCart from "./customer/pages/VireCart"
 import Checkout from "./customer/pages/Checkout"
 import { Toaster } from "react-hot-toast";
-import SingUp from "./auth/SingUp"
+// import SingUp from "./auth/SingUp"
 import { useUserRole } from "./hooks/useUserRole"
 import PrivateRoute from "./routes/PrivateRoute"
 import NoAccess from "./page/Noaccess"
@@ -22,7 +22,7 @@ function App() {
     <>
       <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
       <Routes>
-        <Route path="/auth/signup" element={<SingUp />} />
+        {/* <Route path="/auth/signup" element={<SingUp />} /> */}
         <Route path="/auth/signin" element={<SignIn />} />
         <Route path="/admin/noallow" element={
           <PrivateRoute allowedRoles={["admin"]} userRole={role} loading={loading}>
@@ -36,7 +36,7 @@ function App() {
         </Route>
 
         <Route path="/" element={
-          <PrivateRoute allowedRoles={["user"]} userRole={role} loading={loading}>
+          <PrivateRoute allowedRoles={["user", "admin"]} userRole={role} loading={loading}>
             <Layout />
           </PrivateRoute>
         }>
