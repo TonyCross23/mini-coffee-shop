@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 export const useCreateMenu = () => {
-     const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const queryClient = useQueryClient();
   const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm<menuItemSchemaType>({ resolver: zodResolver(menuItemSchema) });

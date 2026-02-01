@@ -21,13 +21,9 @@ const AdminNavbar = () => {
     <div className="navbar fixed top-0 left-0 w-full z-50 sm:px-4 bg-amber-900 text-white shadow-md px-4">
       {/* Logo / Brand */}
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl sm:text-2xl normal-case">
+        <Link to="/admin/noallow" className="text-xl sm:text-2xl normal-case">
           Admin Panel
-        </a>
-      </div>
-
-      <div>
-        <button onClick={handleLogout}>signOUt</button>
+        </Link>
       </div>
 
       {/* Menu Links */}
@@ -36,6 +32,9 @@ const AdminNavbar = () => {
           <Link to="/admin/noallow" className="btn btn-ghost text-white hover:bg-amber-700">Home</Link>
           <Link to="/admin/noallow/menu/create" className="btn btn-ghost text-white hover:bg-amber-700">Menu</Link>
           <Link to="/admin/noallow/orders" className="btn btn-ghost text-white hover:bg-amber-700">Orders</Link>
+          <div className="btn btn-ghost text-white hover:bg-amber-700">
+            <button onClick={handleLogout}>logout</button>
+          </div>
         </div>
 
         {/* Mobile Hamburger */}
@@ -56,6 +55,9 @@ const AdminNavbar = () => {
               <li><a href="/admin">Home</a></li>
               <li><a href="/admin/menu">Menu</a></li>
               <li><a href="/admin/orders">Orders</a></li>
+              <li className="bg-amber-800 rounded-md ms-2">
+                <button onClick={handleLogout} className="pt-1 px-2">logout</button>
+              </li>
             </ul>
           )}
         </div>

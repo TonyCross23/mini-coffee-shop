@@ -15,7 +15,7 @@ const NavBar = () => {
         </Link>
       </div>
 
-      <div className="flex-none relative">
+      <div className="flex relative">
         <button
           onClick={() => setIsCartOpen(prev => !prev)}
           className="btn btn-ghost btn-circle"
@@ -31,8 +31,8 @@ const NavBar = () => {
         {isCartOpen && (
           <CartDropdown onClose={() => setIsCartOpen(false)} />
         )}
-        <div>
-          <button onClick={handleLogout}>signOUt</button>
+        <div className="bg-amber-800 rounded-md ms-2">
+          <button onClick={handleLogout} className="pt-1 px-2">logout</button>
         </div>
       </div>
     </div>

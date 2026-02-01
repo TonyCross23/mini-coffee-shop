@@ -1,47 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import supabaseClient from "../../utils/SupabaseClient";
-import { useOrderStore } from "../../store/orderStore";
+import { useFetchMenu } from "../../hooks/customer/useFetchMenu";
 
-interface MenuItem {
-    id: number;
-    name: string;
-    price: number;
-    image_url: string;
-}
 
 const UserHome: React.FC = () => {
-    const [searchInput, setSearchInput] = useState("");
-    const [search, setSearch] = useState("");
-    const addToCart = useOrderStore(state => state.addToCart);
 
-    const { data: menuItems, isLoading, error } = useQuery<MenuItem[]>({
-        queryKey: ["menuItems"],
-        queryFn: async () => {
-            const { data, error } = await supabaseClient.from("menu_items").select("*").order("created_at", { ascending: true });
-            if (error) throw error;
-            return data
-        }
-    })
+    const {addToCart, error, filteredMenuItems, handleKeyDown, isLoading,searchInput, setSearchInput} = useFetchMenu()
 
-    const filteredMenuItems = menuItems?.filter((item) =>
-        item.name.toLowerCase().includes(search.toLowerCase())
-    );
+    if (isLoading)  return <div>Loading...</div>;
 
-    // Enter Key Handler
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            setSearch(searchInput);
-        }
-    };
-
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-
-    if (error) {
-        return <div>Error loading menu items.</div>;
-    }
+    if (error) return <div>Error loading menu items.</div>;
 
     return (
         <div className="min-h-screen bg-[#F7F4EF] p-4 sm:p-8">
@@ -56,7 +22,7 @@ const UserHome: React.FC = () => {
                     <input
                         type="text"
                         placeholder="Search coffee..."
-                        className="input input-bordered w-full pl-10 rounded-full bg-white"
+                        className="input input-bordered w-full pl-10 rounded-full text-gray-700 bg-white"
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
                         onKeyDown={handleKeyDown}
@@ -107,7 +73,7 @@ const UserHome: React.FC = () => {
             </div>
 
             {/* Empty State */}
-            {menuItems?.length === 0 && (
+            {filteredMenuItems?.length === 0 && (
                 <div className="text-center mt-20 text-gray-500">
                     ☕ No coffee found
                 </div>

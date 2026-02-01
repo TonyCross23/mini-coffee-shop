@@ -8,7 +8,7 @@ interface CartDropdownProps {
 
 const CartDropdown = ({ onClose }: CartDropdownProps) => {
   const items = useOrderStore(state => state.items);
-  const removeFromCart = useOrderStore(state => state.rmoveFromCart);
+  const removeFromCart = useOrderStore(state => state.removeFromCart);
   const clearCart = useOrderStore(state => state.clearCart);
   const totalAmount = useOrderStore(state => state.totalAmount);
   const updateQuantity = useOrderStore(state => state.updateQuantity);

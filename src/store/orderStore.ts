@@ -4,7 +4,7 @@ import type { OrderItem } from "../types/order"
 interface CreateOrderPayload {
     items: OrderItem[],
     addToCart: (item: OrderItem) => void,
-    rmoveFromCart: (id: string) => void,
+    removeFromCart: (id: string) => void,
     updateQuantity: (id: string, quantity: number) => void,
     clearCart: () => void,
     totalAmount: () => number,
@@ -28,7 +28,7 @@ export const useOrderStore = create<CreateOrderPayload>((set, get) => ({
             set({items: [...get().items, { ...item, total: item.price * item.quantity }]})
         }
     },
-    rmoveFromCart: (id: string) => {
+    removeFromCart: (id: string) => {
         set({ items: get().items.filter(item => item.id !== id) })
     },
     updateQuantity: (id: string, quantity: number = 1) => {
