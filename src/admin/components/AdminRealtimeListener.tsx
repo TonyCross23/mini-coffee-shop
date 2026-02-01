@@ -19,15 +19,15 @@ const AdminRealtimeListener = () => {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "orders" },
         async (payload) => {
-          // 🔔 Sound
+          // Sound
           audioRef.current?.play().catch(() => {});
 
-          // 🔔 Toast
+          // Toast
           toast.success(
             `New order from ${payload.new.customer_name ?? "Unknown"}`
           );
 
-          // 🧾 Fetch order items for printing
+          // Fetch order items for printing
           const { data: items } = await supabaseClient
             .from("order_items")
             .select(`
@@ -44,10 +44,10 @@ const AdminRealtimeListener = () => {
             })),
           };
 
-          // 🖨️ Print
+          // Print
           printOrder(orderForPrint);
 
-          // 🔄 Refresh orders list everywhere
+          // Refresh orders list everywhere
           queryClient.invalidateQueries({ queryKey: ["orders"] });
         }
       )
@@ -58,7 +58,7 @@ const AdminRealtimeListener = () => {
     };
   }, [queryClient]);
 
-  return null; // UI မလို
+  return null; // UI not interset
 };
 
 export default AdminRealtimeListener;

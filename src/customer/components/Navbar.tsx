@@ -1,31 +1,18 @@
 import { useState } from "react";
-import { useOrderStore } from "../../store/orderStore";
 import CartDropdown from "./CartDropdown";
-import { UserAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNav } from "../../hooks/customer/useNav";
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const items = useOrderStore(state => state.items);
-  const { signOutUser } = UserAuth()
-  const navigate = useNavigate()
-
-  const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    try {
-      await signOutUser()
-      navigate('/auth/signin')
-    } catch (error) {
-      console.error("Error signing out:", error)
-    }
-  }
+ const {handleLogout, items} = useNav()
 
   return (
     <div className="navbar fixed top-0 left-0 w-full z-50 bg-amber-900 shadow-sm px-2 sm:px-4">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl sm:text-2xl">
+        <Link to={"/"} className="btn btn-ghost text-xl sm:text-2xl">
           Mini Coffee Shop
-        </a>
+        </Link>
       </div>
 
       <div className="flex-none relative">

@@ -1,130 +1,9 @@
-import { useState, useMemo, useEffect } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import supabaseClient from "../../utils/SupabaseClient";
-import toast from "react-hot-toast";
-
-interface OrderItemDetail {
-    name: string;
-    price: number;
-    quantity: number;
-}
-
-interface Order {
-    id: number;
-    customerName: string;
-    tableNumber: number | null;
-    items: OrderItemDetail[];
-    total: number;
-    status: "Pending" | "Completed" | "Cancelled";
-    date: string;
-}
+import { useOrderList } from "../../hooks/admin/useOrderList";
 
 const AdminOrders: React.FC = () => {
-    const [search, setSearch] = useState("");
-    const queryClient = useQueryClient();
-    const [orders, setOrders] = useState<Order[]>([]);
-    const orderSound = new Audio("/sound/order.mp3");
-    orderSound.volume = 0.7;
 
-    // ✅ Fetch orders
-    const { data: ordersData, isLoading, error } = useQuery<Order[]>({
-        queryKey: ["orders"],
-        queryFn: async () => {
-            const { data: orders, error: ordersError } = await supabaseClient
-                .from("orders")
-                .select("*")
-                .order("created_at", { ascending: false });
-            if (ordersError || !orders) throw ordersError;
-
-            const { data: orderItems, error: orderItemsError } = await supabaseClient
-                .from("order_items")
-                .select("*");
-            if (orderItemsError || !orderItems) throw orderItemsError;
-
-            const { data: menuItems, error: menuItemsError } = await supabaseClient
-                .from("menu_items")
-                .select("*");
-            if (menuItemsError || !menuItems) throw menuItemsError;
-
-            return orders.map((order) => {
-                const orderItemsForThisOrder: OrderItemDetail[] = orderItems
-                    .filter((oi) => oi.order_id === order.id)
-                    .map((oi) => {
-                        const menu = menuItems.find((m) => m.id === oi.menu_item_id);
-                        return {
-                            name: menu?.name || "Unknown",
-                            price: menu?.price || 0,
-                            quantity: oi.quantity,
-                        };
-                    });
-
-                return {
-                    id: order.id,
-                    customerName: order.customer_name || "Unknown",
-                    tableNumber: order.table_number ?? null,
-                    items: orderItemsForThisOrder,
-                    total: order.total || 0,
-                    status:
-                        order.status === "pending"
-                            ? "Pending"
-                            : order.status === "completed"
-                                ? "Completed"
-                                : "Cancelled",
-                    date: order.created_at
-                        ? new Date(order.created_at).toLocaleDateString()
-                        : "-",
-                };
-            });
-        },
-    });
-
-    // ✅ Search filter
-    const filteredOrders = useMemo(
-        () =>
-            ordersData?.filter((order) =>
-                (order.customerName ?? "")
-                    .toLowerCase()
-                    .includes(search.toLowerCase())
-            ),
-        [ordersData, search]
-    );
-
-    // ✅ Delete order
-    const handleDelete = async (orderId: number) => {
-        if (!confirm("Are you sure you want to delete this order?")) return;
-
-        try {
-            await supabaseClient.from("order_items").delete().eq("order_id", orderId);
-            await supabaseClient.from("orders").delete().eq("id", orderId);
-
-            toast.success("Order deleted successfully!");
-            queryClient.invalidateQueries({ queryKey: ["orders"] });
-        } catch (err) {
-            console.error(err);
-            toast.error("Failed to delete order.");
-        }
-    };
-
-    useEffect(() => {
-        if (ordersData) setOrders(ordersData);
-    }, [ordersData]);
-
-    const handleStatusChange = async (orderId: number, newStatus: "Pending" | "Completed" | "Cancelled") => {
-        try {
-            await supabaseClient.from("orders").update({ status: newStatus.toLowerCase() }).eq("id", orderId);
-
-            // local state update
-            setOrders((prev) =>
-                prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
-            );
-
-            toast.success(`Order marked as ${newStatus}`);
-            queryClient.invalidateQueries({ queryKey: ["orders"] });
-        } catch (err) {
-            toast.error("Failed to update order status");
-        }
-    };
-
+    const {handleDeleteOrder: handleDelete, error, handleStatusChange, isLoading, orders: filteredOrders, search, setSearch} = useOrderList()
+    
     if (isLoading) return <div>Loading orders...</div>;
     if (error) return <div>Error loading orders</div>;
 
@@ -169,7 +48,7 @@ const AdminOrders: React.FC = () => {
                             </tr>
                         ) : (
                             filteredOrders?.filter((order) => order.status === "Pending").map((order) => (
-                                <tr key={order.id} className="hover:bg-gray-400">
+                                <tr key={order.id} className="hover:bg-amber-800">
                                     <td>{order.customerName}</td>
                                     <td>{order.tableNumber ?? "-"}</td>
                                     <td>
@@ -201,7 +80,7 @@ const AdminOrders: React.FC = () => {
                                     <td className="flex gap-2">
                                         <button
                                             onClick={() => handleDelete(order.id)}
-                                            className="btn btn-xs bg-red-600 text-white"
+                                            className="btn btn-xs bg-red-600 border-none text-white"
                                         >
                                             Delete
                                         </button>

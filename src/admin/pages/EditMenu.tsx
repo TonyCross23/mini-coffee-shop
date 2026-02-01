@@ -1,92 +1,12 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod";
-import { menuItemSchema, type menuItemSchemaType } from "../../schema/MenuItem";
-import supabaseClient from "../../utils/SupabaseClient";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useEditMenu } from "../../hooks/admin/useEditMenu";
 
 const EditMenu = () => {
-    const { id } = useParams()
-  const queryClient = useQueryClient();
-  const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm<menuItemSchemaType>({ resolver: zodResolver(menuItemSchema) });
-  const [preview, setPreview] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
-    const {data: menuItem , isLoading, error} = useQuery({
-    queryKey: ["menuItem", id],
-    queryFn: async () => {
-        const {data, error} = await supabaseClient.from("menu_items").select("*").eq("id", id).single();
-        if (error) throw error;
-        
-        // Pre-fill form values
-        setValue("name", data.name);
-        setValue("description", data.description);
-        setValue("price", data.price);
-        setPreview(data.image_url || null);
+  const { register, handleSubmit, onSubmit, handleFileChange, errors, loading, preview, isLoading, error } = useEditMenu()
 
-        return data
-    }
-    })
+  if(isLoading) return <div>Loading...</div>;
 
-  const onSubmit = async (data: menuItemSchemaType) => {
-    try {
-      setLoading(true);
-
-      let imageUrl: string | null = menuItem?.image_url || null;
-
-      if (data.image instanceof File) {
-        const fileName = `${Date.now()}-${data.image.name}`;
-        const { error: uploadError } = await supabaseClient.storage.from("menu_images").upload(fileName, data.image);
-
-        if (uploadError) {
-          throw uploadError;
-        }
-
-        const { data: publicUrlData } = supabaseClient.storage.from("menu_images").getPublicUrl(fileName);
-
-        imageUrl = publicUrlData.publicUrl;
-      }
-
-      const { error: insertError } = await supabaseClient.from("menu_items").update({
-        name: data.name,
-        description: data.description,
-        price: data.price,
-        image_url: imageUrl,
-      }).eq("id", id);
-
-      if (insertError) {
-        throw insertError;
-      }
-
-      alert("Menu item created successfully!");
-      reset();
-      setPreview(null);
-      queryClient.invalidateQueries({ queryKey: ["menuItems"] });
-    } catch (error: any) {
-      console.error("Error creating menu item:", error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setValue("image", file);
-    const reader = new FileReader();
-    reader.onloadend = () => setPreview(reader.result as string);
-    reader.readAsDataURL(file);
-  };
-
-  if(isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if(error) {
-    return <div>Error loading menu item.</div>;
-  }
+  if(error) return <div>Error loading menu item.</div>;
 
   return (
     <div className="p-6 max-w-lg mx-auto">
