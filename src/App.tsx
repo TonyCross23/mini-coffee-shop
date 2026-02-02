@@ -8,7 +8,6 @@ import PrivateRoute from "./routes/PrivateRoute"
 import NoAccess from "./page/Noaccess"
 import SignIn from "./auth/SignIn"
 import React, { Suspense } from "react"
-import ReturnRoute from "./routes/ReturnRoute";
 
 const AdminHome = React.lazy(() => import("./admin/pages/Home"));
 const CreateMenu = React.lazy(() => import("./admin/pages/CreateMenu"));
@@ -29,11 +28,9 @@ function App() {
         {/* <Route path="/auth/signup" element={<SingUp />} /> */}
         <Route path="/auth/signin" element={<SignIn />} />
         <Route path="/admin/noallow" element={
-          <ReturnRoute>
             <PrivateRoute allowedRoles={["admin"]} userRole={role} loading={loading}>
               <Layouts />
             </PrivateRoute>
-          </ReturnRoute>
         }>
           <Route index element={<AdminHome />} />
           <Route path="menu/create" element={<CreateMenu />} />
@@ -42,11 +39,9 @@ function App() {
         </Route>
 
         <Route path="/" element={
-          <ReturnRoute>
             <PrivateRoute allowedRoles={["user", "admin"]} userRole={role} loading={loading}>
               <Layout />
             </PrivateRoute>
-          </ReturnRoute>
         }>
           <Route index element={<UserHome />} />
           <Route path="/view/cart" element={<VireCart />} />
