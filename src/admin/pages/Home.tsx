@@ -39,7 +39,7 @@ const AdminHome: React.FC = () => {
             </div>
 
             {/* Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 md:grid-cols-3 gap-6">
                 {
                     filteredMenuItems?.length === 0 && <p>no items</p>
                 }
@@ -68,10 +68,10 @@ const AdminHome: React.FC = () => {
 
                             {/* Buttons */}
                             <div className="mt-4 flex justify-center gap-2">
-                                <Link to={`/admin/noallow/menu/edit/${item.id}`} className="btn btn-sm btn-outline dark:border-amber-700 text-amber-700 w-35">
+                                <Link to={`/admin/noallow/menu/edit/${item.id}`} className="btn btn-sm btn-outline dark:border-amber-700 text-amber-700 w-30">
                                     Edit
                                 </Link>
-                                <button className="btn btn-sm bg-amber-700 text-white w-35">
+                                <button className="btn btn-sm bg-amber-700 text-white w-30">
                                     Delete
                                 </button>
                             </div>

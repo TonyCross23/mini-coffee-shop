@@ -14,7 +14,7 @@ const CartDropdown = ({ onClose }: CartDropdownProps) => {
   const updateQuantity = useOrderStore(state => state.updateQuantity);
 
   return (
-    <div className="absolute right-0 mt-2 w-80 sm:w-96 max-w-xs sm:max-w-md rounded-lg shadow-lg bg-base-100 z-50">
+    <div className="absolute right-0 mt-10 w-80 sm:w-96 max-w-xs sm:max-w-md rounded-lg shadow-lg bg-base-100 z-50">
       <div className="max-h-64 overflow-y-auto px-4 py-2">
         {items.length === 0 && (
           <p className="text-center py-4">Your cart is empty.</p>
@@ -71,7 +71,7 @@ const CartDropdown = ({ onClose }: CartDropdownProps) => {
           </div>
 
           <div className="flex flex-col space-y-2">
-            <Link to="/view/cart" className="btn btn-primary bg-amber-700">
+            <Link to="/view/cart" onClick={onClose} className="btn btn-primary bg-amber-700">
               View Cart
             </Link>
             <button className="btn btn-outline" onClick={() => { clearCart(); onClose(); }}>

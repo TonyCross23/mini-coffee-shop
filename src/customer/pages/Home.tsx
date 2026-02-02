@@ -70,14 +70,7 @@ const UserHome: React.FC = () => {
                         </div>
                     </div>
                 ))}
-            </div>
-
-            {/* Empty State */}
-            {filteredMenuItems?.length === 0 && (
-                <div className="text-center mt-20 text-gray-500">
-                    ☕ No coffee found
-                </div>
-            )}
+            </div>  
         </div>
     );
 };

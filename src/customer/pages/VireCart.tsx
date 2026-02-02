@@ -4,14 +4,11 @@ import { useNavigate } from "react-router-dom";
 
 const ViewCart = () => {
   const navigate = useNavigate();
-  const { items, removeFromCart, clearCart, totalAmount, updateQuantity } =
-    useOrderStore((state) => ({
-      items: state.items,
-      removeFromCart: state.removeFromCart,
-      clearCart: state.clearCart,
-      totalAmount: state.totalAmount,
-      updateQuantity: state.updateQuantity,
-    }));
+  const items = useOrderStore((state) => state.items);
+  const removeFromCart = useOrderStore((state) => state.removeFromCart);
+  const clearCart = useOrderStore((state) => state.clearCart);
+  const totalAmount = useOrderStore((state) => state.totalAmount);
+  const updateQuantity = useOrderStore((state) => state.updateQuantity);
 
   return (
     <div className="mt-20 flex flex-col min-h-[80vh] relative">

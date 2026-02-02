@@ -11,17 +11,15 @@ import { useForm } from "react-hook-form";
 export const useCheckout = () => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { items, totalAmount, clearCart } = useOrderStore((state) => ({
-        items: state.items,
-        totalAmount: state.totalAmount,
-        clearCart: state.clearCart
-    }))
+    const items = useOrderStore((state) => state.items);
+    const totalAmount = useOrderStore((state) => state.totalAmount);
+    const clearCart = useOrderStore((state) => state.clearCart);
     const [loading, setLoading] = useState(false);
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<ChekoutType>({ resolver: zodResolver(CheckoutSchema) })
+    } = useForm<ChekoutType>({ resolver: zodResolver(CheckoutSchema)})
 
     const handlePlaceOrder = async (data: ChekoutType) => {
 
@@ -31,7 +29,7 @@ export const useCheckout = () => {
             const { data: orderData, error: insertError } = await supabaseClient
                 .from("orders")
                 .insert({
-                    table_number: data.table_number,
+                    table_number: data.table_number ,
                     customer_name: data.customer_name,
                     total: totalAmount(),
                     status: "pending",

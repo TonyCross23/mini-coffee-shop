@@ -44,7 +44,7 @@ function App() {
           <Route path="/view/cart" element={<VireCart />} />
           <Route path="/checkout" element={<Checkout />} />
         </Route>
-        <Route path="/no-access" element={<NoAccess />} />
+        <Route path="/auth/signin" element={<NoAccess />} />
       </Routes>
     </>
   )

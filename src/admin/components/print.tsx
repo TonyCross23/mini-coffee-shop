@@ -52,10 +52,10 @@ export const printOrder = (order: any) => {
 
 <body>
   <div class="center bold">
-    🍽️ MY RESTAURANT
+    Mini Coffee Shop
   </div>
   <div class="center">
-    09-123456789<br/>
+    09-95xxxxxxx<br/>
     Yangon
   </div>
 

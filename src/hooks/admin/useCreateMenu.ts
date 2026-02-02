@@ -4,6 +4,7 @@ import supabaseClient from "../../utils/SupabaseClient";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
 
 export const useCreateMenu = () => {
   const [loading, setLoading] = useState(false);
@@ -43,7 +44,7 @@ export const useCreateMenu = () => {
         throw insertError;
       }
 
-      alert("Menu item created successfully!");
+      toast.success("Creating new menu successfully");
       reset();
       setPreview(null);
       queryClient.invalidateQueries({ queryKey: ["menuItems"] });
