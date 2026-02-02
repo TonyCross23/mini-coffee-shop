@@ -12,7 +12,7 @@ const ReturnRoute = ({children}: ReturnRouteProp) => {
         return <p>Loading...</p>
     }
   return (
-    <>{session ? <>{children}</> : <Navigate to="/signup"/>}</>
+    <>{session ? <>{children}</> : <Navigate to="/auth/signin"/>}</>
   )
 }
 
