@@ -12,7 +12,7 @@ const PrivateRoute = ({ children, allowedRoles, userRole, loading }: ProtectedRo
     if (loading) return <p>Loading...</p>;
 
     if (!userRole || !allowedRoles.includes(userRole)) {
-        return <Navigate to="/no-access" replace />;
+        return <Navigate to="/auth/signin" replace />;
     }
 
     return <>{children}</>;
