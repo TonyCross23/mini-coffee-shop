@@ -22,7 +22,7 @@ export const useSingIn = () => {
         try {
             const result = await signInUser(data.email, data.password)
             if (result?.success) {
-                navigate('/')
+                navigate('/', { replace: true })
             }
         } catch (error: any) {
             setAuthError("Something went wrong during sign in.")
