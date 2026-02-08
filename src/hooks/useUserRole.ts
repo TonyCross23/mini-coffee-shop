@@ -2,39 +2,37 @@ import { useEffect, useState } from "react";
 import supabaseClient from "../utils/SupabaseClient";
 
 
-export const    useUserRole = () => {
+export const useUserRole = () => {
     const [role, setRole] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        try {
-            const fethcUserRole = async () => {
-                const sessionResult = await supabaseClient.auth.getSession();
+        const fetchUserRole = async (userId: string) => {
+            const { data, error } = await supabaseClient
+                .from("profiles")
+                .select("role")
+                .eq("id", userId)
+                .single();
+            if (!error) setRole(data?.role ?? null);
+            setLoading(false);
+        };
 
-                const session = sessionResult.data.session;
-                if (!session?.user) {
-                    setRole(null);
-                    setLoading(false);
-                    return;
-                }
+        supabaseClient.auth.getSession().then(({ data: { session } }) => {
+            if (session) fetchUserRole(session.user.id);
+            else setLoading(false);
+        });
 
-                const userId = session.user.id;
-
-                const { data, error } = await supabaseClient.from("profiles").select("role").eq("id", userId).single();
-
-                if (error) {
-                    console.error(error)
-                    setRole(null);
-                } else {
-                    setRole(data?.role ?? null);
-                }
+        const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((_event, session) => {
+            if (session) {
+                fetchUserRole(session.user.id);
+            } else {
+                setRole(null);
                 setLoading(false);
             }
-            fethcUserRole();
-        } catch (error) {
+        });
 
-        }
-    }, [])
+        return () => subscription.unsubscribe();
+    }, []);
 
     return { role, loading };
 }

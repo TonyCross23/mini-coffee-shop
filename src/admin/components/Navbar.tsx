@@ -52,9 +52,9 @@ const AdminNavbar = () => {
 
           {menuOpen && (
             <ul className="menu dropdown-content mt-2 p-2 shadow bg-amber-900 rounded-box w-40 text-white space-y-2">
-              <li><a href="/admin">Home</a></li>
-              <li><a href="/admin/menu">Menu</a></li>
-              <li><a href="/admin/orders">Orders</a></li>
+              <li><Link to="/admin/noallow">Home</Link></li>
+              <li><Link to="/admin/noallow/menu/create">Menu</Link></li>
+              <li><Link to="/admin/noallow/orders">Orders</Link></li>
               <li className="bg-amber-800 rounded-md ms-2">
                 <button onClick={handleLogout} className="pt-1 px-2">logout</button>
               </li>

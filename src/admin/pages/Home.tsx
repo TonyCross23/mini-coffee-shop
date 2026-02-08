@@ -27,7 +27,7 @@ const AdminHome: React.FC = () => {
                     <input
                         type="text"
                         placeholder="Search coffee..."
-                        className="input input-bordered w-full pl-10 rounded-full bg-white"
+                        className="input input-bordered w-full pl-10 rounded-full text-gray-500 bg-white"
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
                         onKeyDown={handleKeyDown}

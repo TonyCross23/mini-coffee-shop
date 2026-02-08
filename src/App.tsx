@@ -8,6 +8,7 @@ import PrivateRoute from "./routes/PrivateRoute"
 import NoAccess from "./page/Noaccess"
 import SignIn from "./auth/SignIn"
 import React, { Suspense } from "react"
+import PublicRoute from "./routes/PublicRoute";
 
 const AdminHome = React.lazy(() => import("./admin/pages/Home"));
 const CreateMenu = React.lazy(() => import("./admin/pages/CreateMenu"));
@@ -26,11 +27,14 @@ function App() {
       <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
       <Routes>
         {/* <Route path="/auth/signup" element={<SingUp />} /> */}
-        <Route path="/auth/signin" element={<SignIn />} />
+        <Route path="/auth/signin" element={
+          <PublicRoute userRole={role} loading={loading}>
+            <SignIn />
+          </PublicRoute>} />
         <Route path="/admin/noallow" element={
-            <PrivateRoute allowedRoles={["admin"]} userRole={role} loading={loading}>
-              <Layouts />
-            </PrivateRoute>
+          <PrivateRoute allowedRoles={["admin"]} userRole={role} loading={loading}>
+            <Layouts />
+          </PrivateRoute>
         }>
           <Route index element={<AdminHome />} />
           <Route path="menu/create" element={<CreateMenu />} />
@@ -39,9 +43,9 @@ function App() {
         </Route>
 
         <Route path="/" element={
-            <PrivateRoute allowedRoles={["user", "admin"]} userRole={role} loading={loading}>
-              <Layout />
-            </PrivateRoute>
+          <PrivateRoute allowedRoles={["user", "admin"]} userRole={role} loading={loading}>
+            <Layout />
+          </PrivateRoute>
         }>
           <Route index element={<UserHome />} />
           <Route path="/view/cart" element={<VireCart />} />

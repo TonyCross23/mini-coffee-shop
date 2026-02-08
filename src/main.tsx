@@ -5,6 +5,12 @@ import App from './App.tsx'
 import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthContextProvider } from './context/AuthContext.tsx'
+import { registerSW } from "virtual:pwa-register";
+
+registerSW({
+  onNeedRefresh() { console.log("New SW available"); },
+  onOfflineReady() { console.log("App ready offline"); }
+});
 
 const queryClient = new QueryClient({
   defaultOptions: {

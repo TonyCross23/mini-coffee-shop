@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { authValidationSchema, type AuthInput } from "../schema/AuthValidation"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
+import supabaseClient from "../utils/SupabaseClient"
 
 export const useSingIn = () => {
     const { signInUser } = UserAuth()
@@ -22,7 +23,19 @@ export const useSingIn = () => {
         try {
             const result = await signInUser(data.email, data.password)
             if (result?.success) {
-                navigate('/', { replace: true })
+                const { data: profile } = await supabaseClient
+                .from("profiles")
+                .select("role")
+                .eq("id", result.data.user.id)
+                .single();
+
+                const role = profile?.role;
+
+                if(role === "admin") {
+                    navigate("/admin/noallow", {replace: true})
+                } else {
+                    navigate('/', { replace: true });
+                }
             }
         } catch (error: any) {
             setAuthError("Something went wrong during sign in.")
